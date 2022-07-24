@@ -1,8 +1,8 @@
-import {React,useState, useEffect, useRef} from 'react'
+import {React,useState, useEffect, useRef} from 'react';
 import { GoogleMap, Marker , useLoadScript, InfoBox} from '@react-google-maps/api';
 import InfoBoxComponent from '../InfoBoxComponent/InfoBoxCompoent';
-import styled from 'styled-components';
-
+import axios from 'axios';
+import AddNoteForm from '../AddNoteForm/AddNoteForm';
 
 const containerStyle = {
   width: '100%',
@@ -12,16 +12,29 @@ const containerStyle = {
   zIndex: 0
 }
 
+
+
 function Map() {
   const [current, setCurrent] = useState(navigator.geolocation.getCurrentPosition.coords);
-  const noteInput = useRef(null);
+  // const noteInput = useRef(null);
+  // const userInput = useRef(null);
   const [activeMarker, setActiveMarker] = useState({});
   const [addNote, setAddNote] = useState(false);
-  const [clickedLatLng, setclickedLatLng] = useState(false);
+  const [clickedLatLng, setclickedLatLng] = useState();
+  const [landmarks, setLandmarks] = useState([]);
+  const [noteInput, setNoteInput] = useState("");
+  const [userInput, setUserInput] = useState("");
+
+
+  useEffect(()=>{
+    axios.get('http://localhost:8000/api/get').then(res => {
+      console.log(res.data.data);
+      setLandmarks(res.data.data);
+   })
+  },[]);
 
   useEffect(()=>{
     navigator.geolocation.getCurrentPosition(position => {
-      console.log(position.coords);
       setCurrent({
         lat: position.coords.latitude,
         lng: position.coords.longitude
@@ -29,18 +42,12 @@ function Map() {
     })
   },[])
 
-  const places = [
-    { id: "1", pos: { lat: 39.09366509575983, lng: -94.58751660204751 },  },
-    { id: "2", pos: { lat: 39.10894664788252, lng: -94.57926449532226 } },
-    { id: "3", pos: { lat: 39.07602397235644, lng: -94.5184089401211 } }
-  ];
-
   const { isLoaded } = useLoadScript({
     // Enter your own Google Maps API key
     googleMapsApiKey: "AIzaSyAeMFL1pYWS8f1aqpEGZaPNIZBtrPNDlvU"
   });
 
-  const handleClickMarker = ({position})=> {
+  const handleClickMarker = ()=> {
     // console.log(addNote);
     if(activeMarker === current){
       setActiveMarker(null);
@@ -51,28 +58,23 @@ function Map() {
     console.log(addNote);
   }
 
-  const handleSubmit=(e)=> {
-    alert('A name was submitted: ' + noteInput.current);
+  const handleSubmit=()=> {
+    // e.preventDefault();
+    alert('submitted: ' + noteInput);
+    const comments = [{
+        user: userInput,
+        comment: noteInput
+    }]
     setAddNote(false);
-    // setNote(null);
-    console.log(noteInput.current)
-    e.preventDefault();
+    axios.post('http://localhost:8000/api/landmark', {lng:clickedLatLng.lng, lat: clickedLatLng.lat, comments: comments})
+    .then(res=>{
+      console.log(res);
+      console.log(res.data);//This line of code will redirect you once the submission is succeed
+    })
   }
 
-  const AddNoteInput = ()=>{
-    return(
-      <form onSubmit={handleSubmit}>
-      <label>
-        note:
-        <input type="text" ref={noteInput}/>
-      </label>
-      <input type="submit" value="Submit" />
-      </form>
-    )
-  }
 
   const renderMap = () =>{
-
     return(
       <>
         <GoogleMap
@@ -82,7 +84,7 @@ function Map() {
         onClick={(e)=>setclickedLatLng(e.latLng.toJSON())}
         onResize = {() => setclickedLatLng(null)}
         >
-        {(
+        {
           <>
             <Marker position={current} onClick={()=>handleClickMarker({current})}>
            
@@ -90,8 +92,13 @@ function Map() {
         
             </Marker>
             {clickedLatLng && <Marker position={clickedLatLng} onClick={()=>handleClickMarker()}/>}
+            { 
+            landmarks.map(landmark => <Marker key={landmark.id} position={{lat:landmark.lat,lng: landmark.lng}}></Marker>)
+            }
+
+
           </>
-        )}
+        }
         </GoogleMap>
         {
            clickedLatLng && <div
@@ -105,9 +112,15 @@ function Map() {
              backgroundColor: "white", // or you can use height: '100vh'
            }}
          >
+           <div>{"lat "+clickedLatLng.lat}{"lng "+clickedLatLng.lng}</div>
           <button onClick={() => setclickedLatLng(null)}>close</button>
           <button onClick={()=> setAddNote(true)}>add Note</button>
-          { addNote && <AddNoteInput />}
+          { addNote && <AddNoteForm  handleSubmit = {handleSubmit}noteInput={noteInput} userInput={userInput} setUserInput={setUserInput} setNoteInput={setNoteInput}/>}
+          { 
+            landmarks.map((landmark) => {
+              return <div key={landmark.id}>{landmark.lat}</div>
+            })
+          }
          </div>
         }
       </>
