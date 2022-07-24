@@ -114,7 +114,7 @@ const getCommentByLandmark = async (req, res) => {
             if (err) {
                 return res.status(404).json({
                     err,
-                    message: 'Movie not found!',
+                    message: 'not found!',
                 })
             }
     
@@ -142,6 +142,29 @@ const getCommentByLandmark = async (req, res) => {
         
             
 }
+
+const searchByText = async (req, res)=>{
+    const searchBy =req.params.keyText;
+    console.log("search"+JSON.stringify(req.params.keyText));
+
+    Landmark.find({$or:[{ "comments.comment": searchBy},{"comments.user":searchBy}]}, (err, landmark) => {
+        console.log("landmark"+ landmark)
+        if (err) {
+            return res.status(404).json({
+                err,
+                message: 'not found!',
+            })
+        }
+
+        return res.status(200).json({
+                    success: true,
+                    landmark: JSON.stringify(landmark),
+                    message: 'find!',
+                })
+            
+        })
+        
+    }
 
 // deleteMovie = async (req, res) => {
 //     await Movie.findOneAndDelete({ _id: req.params.id }, (err, movie) => {
@@ -192,5 +215,6 @@ module.exports = {
     createLandmark,
     updateLandmark,
     getLandmarks,
-    getCommentByLandmark
+    getCommentByLandmark,
+    searchByText
 }
