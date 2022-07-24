@@ -28,7 +28,7 @@ function Map() {
   const [searchInput, setSearchInput] = useState("");
   const [activeComments, setActiveComments] = useState([]);
   const [searchResult, setSearchResult] = useState();
-  const base_url = "http://localhost:8000/api"
+  const base_url = "https://my-community-landmarks.herokuapp.com/api"
 
   useEffect(()=>{
     axios.get(base_url+'/get').then(res => {
