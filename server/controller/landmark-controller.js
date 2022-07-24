@@ -97,11 +97,11 @@ const updateLandmark = async (req, res) => {
 }
 
 const getCommentByLandmark = async (req, res) => {
-        const body = req.body
+        const body = req.body;
         // const lat = req.body.lat;
         // const lng = req.body.lng;
         // const newComment = req.body.comment;
-        console.log(req.body);
+        console.log("reqbody"+JSON.stringify(req.params.id));
     
         if (!body) {
             return res.status(400).json({
@@ -109,8 +109,8 @@ const getCommentByLandmark = async (req, res) => {
                 error: 'You must provide a landmark to update',
             })
         }
-        Landmark.findOne({_id: req.body.id }, (err, landmark) => {
-            console.log("findlandmarker" + err);
+        Landmark.findOne({_id: req.params.id }, (err, landmark) => {
+            console.log("comments"+ landmark)
             if (err) {
                 return res.status(404).json({
                     err,
@@ -132,23 +132,14 @@ const getCommentByLandmark = async (req, res) => {
             // movie.time = body.time
             // movie.rating = body.rating
             // landmark.comments = body.comments;
-    
-            landmark
-                .then(() => {
-                    return res.status(200).json({
+
+            return res.status(200).json({
                         success: true,
                         id: landmark._id,
-                        message: 'Movie found!',
+                        message: landmark.comments,
                     })
-                })
-                .catch(error => {
-                    return res.status(404).json({
-                        error,
-                        message: 'Movie not updated!',
-                    })
-                })
             })
-    
+        
             
 }
 
@@ -200,5 +191,6 @@ const getLandmarks = async (req, res) => {
 module.exports = {
     createLandmark,
     updateLandmark,
-    getLandmarks
+    getLandmarks,
+    getCommentByLandmark
 }

@@ -24,6 +24,7 @@ function Map() {
   const [landmarks, setLandmarks] = useState([]);
   const [noteInput, setNoteInput] = useState("");
   const [userInput, setUserInput] = useState("");
+  const [activeComments, setActiveComments] = useState([]);
 
 
   useEffect(()=>{
@@ -47,7 +48,7 @@ function Map() {
     googleMapsApiKey: "AIzaSyAeMFL1pYWS8f1aqpEGZaPNIZBtrPNDlvU"
   });
 
-  const handleClickMarker = ()=> {
+  const handleClickCurrentMarker = ()=> {
     // console.log(addNote);
     if(activeMarker === current){
       setActiveMarker(null);
@@ -56,6 +57,14 @@ function Map() {
     setActiveMarker(current);
     setAddNote(true);
     console.log(addNote);
+  }
+  const handleClickMarker=(id)=>{
+    axios.get(`http://localhost:8000/api/getComments/${id}`)
+    .then(res=>{
+      console.log(res);
+      console.log(res.data.message[0].comment);
+      setActiveComments(res.data.message);//This line of code will redirect you once the submission is succeed
+    })
   }
 
   const handleSubmit=()=> {
@@ -75,6 +84,7 @@ function Map() {
 
 
   const renderMap = () =>{
+    console.log(activeComments);
     return(
       <>
         <GoogleMap
@@ -86,14 +96,14 @@ function Map() {
         >
         {
           <>
-            <Marker position={current} onClick={()=>handleClickMarker({current})}>
+            <Marker position={current} onClick={()=>handleClickCurrentMarker({current})}>
            
             {activeMarker && <InfoBoxComponent position={current}/> }
         
             </Marker>
-            {clickedLatLng && <Marker position={clickedLatLng} onClick={()=>handleClickMarker()}/>}
+            {clickedLatLng && <Marker position={clickedLatLng}  />}
             { 
-            landmarks.map(landmark => <Marker key={landmark.id} position={{lat:landmark.lat,lng: landmark.lng}}></Marker>)
+            landmarks.map(landmark => <Marker key={landmark.id} position={{lat:landmark.lat,lng: landmark.lng}} onClick={(e)=>handleClickMarker(landmark._id)}></Marker>)
             }
 
 
@@ -117,8 +127,14 @@ function Map() {
           <button onClick={()=> setAddNote(true)}>add Note</button>
           { addNote && <AddNoteForm  handleSubmit = {handleSubmit}noteInput={noteInput} userInput={userInput} setUserInput={setUserInput} setNoteInput={setNoteInput}/>}
           { 
-            landmarks.map((landmark) => {
-              return <div key={landmark.id}>{landmark.lat}</div>
+            activeComments.map((comment) => {
+              return (
+                    <>
+                    <div key={comment.id}>{comment.comment}</div>
+                    By 
+                    <div key={comment.id}>{comment.user}</div>
+                    </>
+              )
             })
           }
          </div>

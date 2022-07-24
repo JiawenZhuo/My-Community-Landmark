@@ -16,5 +16,6 @@ router.put('/update', jsonParser,landmarkController.updateLandmark)
 // router.delete('/movie/:id', MovieCtrl.deleteMovie)
 // router.get('/movie/:id', MovieCtrl.getMovieById)
 router.get('/get', jsonParser, landmarkController.getLandmarks)
+router.get('/getComments/:id', jsonParser, landmarkController.getCommentByLandmark)
 
 module.exports = router;
