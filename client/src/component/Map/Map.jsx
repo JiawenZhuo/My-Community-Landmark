@@ -28,9 +28,10 @@ function Map() {
   const [searchInput, setSearchInput] = useState("");
   const [activeComments, setActiveComments] = useState([]);
   const [searchResult, setSearchResult] = useState();
+  const base_url = "http://localhost:8000/api"
 
   useEffect(()=>{
-    axios.get('http://localhost:8000/api/get').then(res => {
+    axios.get(base_url+'/get').then(res => {
       console.log(res.data.data);
       setLandmarks(res.data.data);
    })
@@ -61,10 +62,9 @@ function Map() {
     console.log(addNote);
   }
   const handleClickMarker=(id)=>{
-    axios.get(`http://localhost:8000/api/getComments/${id}`)
+    axios.get(base_url+ `/getComments/${id}`)
     .then(res=>{
       console.log(res);
-      console.log(`http://localhost:8000/api/getComments/${id}`);
       setActiveComments(res.data.message);//This line of code will redirect you once the submission is succeed
     })
   }
@@ -77,7 +77,7 @@ function Map() {
         comment: noteInput
     }]
     setAddNote(false);
-    axios.post('http://localhost:8000/api/landmark', {lng:clickedLatLng.lng, lat: clickedLatLng.lat, comments: comments})
+    axios.post(base_url+'/landmark', {lng:clickedLatLng.lng, lat: clickedLatLng.lat, comments: comments})
     .then(res=>{
       console.log(res.data.id);
       console.log(res.data);//This line of code will redirect you once the submission is succeed
@@ -85,7 +85,7 @@ function Map() {
   }
   const handleSearch=(e)=>{
     e.preventDefault()
-    axios.get(`http://localhost:8000/api/searchByText/${searchInput}`)
+    axios.get(base_url+`/searchByText/${searchInput}`)
     .then(res=>{
       console.log("res"+res.data.landmark);
       setSearchResult(res.data.message)//This line of code will redirect you once the submission is succeed
