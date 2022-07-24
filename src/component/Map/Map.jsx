@@ -31,7 +31,7 @@ function Map() {
   const [noteInput, setNoteInput] = useState("");
   const [userInput, setUserInput] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [activeComments, setActiveComments] = useState([]);
+  const [activeComments, setActiveComments] = useState(null);
   const [searchResult, setSearchResult] = useState();
   const base_url = "https://my-community-landmarks.herokuapp.com/api";
 
@@ -70,7 +70,6 @@ function Map() {
     console.log(e);
     setclickedLatLng(e);
     axios.get(base_url + `/getComments/${id}`).then((res) => {
-      console.log(base_url + `/getComments/${id}`);
       setActiveComments(res.data.message); //This line of code will redirect you once the submission is succeed
     });
   };
@@ -107,9 +106,13 @@ function Map() {
     e.preventDefault();
     setSearchInput(e.target.value);
   };
+  const onClickMap=(e)=>{
+    setclickedLatLng(e);
+    setActiveComments(null);
+  }
 
   const renderMap = () => {
-    console.log(activeComments);
+    // console.log(activeComments);
     return (
       <>
         <SearchForm
@@ -122,8 +125,8 @@ function Map() {
           mapContainerStyle={containerStyle}
           center={current}
           zoom={10}
-          onClick={(e) => setclickedLatLng(e.latLng.toJSON())}
-          onResize={() => setclickedLatLng(null)}
+          onClick={(e) => onClickMap(e.latLng.toJSON())}
+          onMouseMove={() => setActiveComments(null)}
         >
           {
             <>
@@ -135,6 +138,7 @@ function Map() {
               </Marker>
               {clickedLatLng && (
                 <Marker
+        
                   position={clickedLatLng}
                 />
               )}
@@ -175,7 +179,9 @@ function Map() {
                 setNoteInput={setNoteInput}
               />
             )}
-            {activeComments &&
+
+            {
+            activeComments &&
               activeComments.map((comment) => {
                 return (
                   <>
