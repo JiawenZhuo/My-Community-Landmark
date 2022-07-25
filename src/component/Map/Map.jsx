@@ -25,7 +25,7 @@ function Map() {
   );
   // const noteInput = useRef(null);
   // const userInput = useRef(null);
-  const [activeMarker, setActiveMarker] = useState();
+  const [activeMarkerId, setActiveMarkerId] = useState();
   const [addNote, setAddNote] = useState(false);
   const [clickedLatLng, setclickedLatLng] = useState();
   const [landmarks, setLandmarks] = useState([]);
@@ -61,19 +61,15 @@ function Map() {
     googleMapsApiKey: "AIzaSyAeMFL1pYWS8f1aqpEGZaPNIZBtrPNDlvU",
   });
 
-  const handleClickCurrentMarker = () => {
+  const handleClickCurrentMarker = (e) => {
     // console.log(addNote);
-    if (activeMarker === current) {
-      setActiveMarker(null);
-      return;
-    }
-    setActiveMarker(current);
+    setclickedLatLng(e);
     setAddNote(true);
-    console.log(addNote);
   };
   const handleClickMarker = ( e, id ) => {
-    console.log(e);
     setclickedLatLng(e);
+    setActiveMarkerId(id);
+    console.log(activeMarkerId);
     axios.get(base_url + `/getComments/${id}`).then((res) => {
       setActiveComments(res.data.message); //This line of code will redirect you once the submission is succeed
     });
@@ -88,6 +84,18 @@ function Map() {
         comment: noteInput,
       },
     ];
+    console.log(activeMarkerId);
+    if(activeComments){
+      axios
+      .put(base_url + `/update/${activeMarkerId}`, {
+        comments: comments,
+      })
+      .then((res) => {
+        console.log(res.data.id);
+        console.log(res.data); 
+      });
+    }else{
+  
     // setAddNote(false);
     axios
       .post(base_url + "/landmark", {
@@ -99,6 +107,7 @@ function Map() {
         console.log(res.data.id);
         console.log(res.data); 
       });
+    }
   };
   const handleSearch = (e) => {
     e.preventDefault();
@@ -182,7 +191,7 @@ function Map() {
               <Marker
                 key={current}
                 position={current}
-                onClick={() => handleClickCurrentMarker({ current })}
+                onClick={(e) => handleClickCurrentMarker(e.latLng.toJSON())}
                 >
                 <InfoBoxComponent position={current}/>
               </Marker>
