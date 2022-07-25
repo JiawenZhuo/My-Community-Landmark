@@ -18,6 +18,7 @@ const containerStyle = {
   zIndex: 0,
 };
 
+
 function Map() {
   const [current, setCurrent] = useState(
     navigator.geolocation.getCurrentPosition.coords
@@ -32,7 +33,7 @@ function Map() {
   const [userInput, setUserInput] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [activeComments, setActiveComments] = useState(null);
-  const [searchResult, setSearchResult] = useState();
+  const [searchResults, setSearchResults] = useState([]);
   const base_url = "https://my-community-landmarks.herokuapp.com/api";
 
   useEffect(() => {
@@ -74,8 +75,8 @@ function Map() {
     });
   };
 
-  const handleSubmit = () => {
-    // e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
     alert("submitted: " + noteInput);
     const comments = [
       {
@@ -83,7 +84,7 @@ function Map() {
         comment: noteInput,
       },
     ];
-    setAddNote(false);
+    // setAddNote(false);
     axios
       .post(base_url + "/landmark", {
         lng: clickedLatLng.lng,
@@ -92,14 +93,14 @@ function Map() {
       })
       .then((res) => {
         console.log(res.data.id);
-        console.log(res.data); //This line of code will redirect you once the submission is succeed
+        console.log(res.data); 
       });
   };
   const handleSearch = (e) => {
     e.preventDefault();
     axios.get(base_url + `/searchByText/${searchInput}`).then((res) => {
-      console.log("res" + res.data.landmark);
-      setSearchResult(res.data.message); //This line of code will redirect you once the submission is succeed
+      console.log("res" + JSON.stringify(res.data.landmark));
+      setSearchResults(JSON.stringify(res.data.landmark));
     });
   };
   const searchOnChange = (e) => {
@@ -110,9 +111,8 @@ function Map() {
     setclickedLatLng(e);
     setActiveComments(null);
   }
-
   const renderMap = () => {
-    // console.log(activeComments);
+    console.log(searchResults);
     return (
       <>
         <SearchForm
@@ -120,6 +120,7 @@ function Map() {
           searchOnChange={searchOnChange}
           searchInput={searchInput}
           style={{ zIndex: 100 }}
+          setSearchResults ={setSearchResults}
         />
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -137,9 +138,7 @@ function Map() {
                 {activeMarker && <InfoBoxComponent position={current} />}
               </Marker>
               {clickedLatLng && (
-                <Marker
-        
-                  position={clickedLatLng}
+                <Marker  position={clickedLatLng}
                 />
               )}
               {landmarks.map((landmark) => (
@@ -172,7 +171,7 @@ function Map() {
             <button onClick={() => setAddNote(true)}>add Note</button>
             {clickedLatLng && (
               <AddNoteForm
-                handleSubmit={handleSubmit}
+                handleSubmit={(e)=>handleSubmit(e)}
                 noteInput={noteInput}
                 userInput={userInput}
                 setUserInput={setUserInput}
@@ -191,6 +190,13 @@ function Map() {
                   </>
                 );
               })}
+              {
+                searchResults && searchResults.map((searchResult)=>{
+                    return (
+                      <div>searchResult._id</div>
+                    )
+                })
+              }
           </div>
         )}
       </>
