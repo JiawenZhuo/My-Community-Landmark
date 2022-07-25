@@ -28,7 +28,7 @@ function Map() {
   const [activeMarkerId, setActiveMarkerId] = useState();
   const [addNote, setAddNote] = useState(false);
   const [clickedLatLng, setclickedLatLng] = useState();
-  const [landmarks, setLandmarks] = useState([]);
+  const [landmarks, setLandmarks] = useState(null);
   const [noteInput, setNoteInput] = useState("");
   const [userInput, setUserInput] = useState("");
   const [searchInput, setSearchInput] = useState("");
@@ -93,7 +93,6 @@ function Map() {
         console.log(res.data); 
       });
     }else{
-
     axios
       .post(base_url + "/landmark", {
         lng: clickedLatLng.lng,
@@ -101,14 +100,14 @@ function Map() {
         comments: comments,
       })
       .then((res) => {
-        console.log(res.data.id);
-        console.log(res.data); 
+        setLandmarks([...landmarks, res.data.landmark])
       });
     }
     setActiveComments(null);
     setAddNote(false);
     setNoteInput(null);
     setUserInput(null);
+   
   };
   const handleSearch = (e) => {
     e.preventDefault();
@@ -199,9 +198,8 @@ function Map() {
               </Marker>
               {clickedLatLng && (
                 <Marker position={clickedLatLng}/>
-                
               )}
-              {landmarks.map((landmark) => {
+              {landmarks && landmarks.map((landmark) => {
                 return(
                   testIfBelongResult(landmark) ? <SearchResultMarker landmark={landmark}/> : <SavedMarker landmark={landmark}/>
                 )}
