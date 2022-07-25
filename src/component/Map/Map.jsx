@@ -107,7 +107,6 @@ function Map() {
     setAddNote(false);
     setNoteInput(null);
     setUserInput(null);
-   
   };
   const handleSearch = (e) => {
     e.preventDefault();
@@ -185,7 +184,6 @@ function Map() {
           center={current}
           zoom={10}
           onClick={(e) => onClickMap(e.latLng.toJSON())}
-          onMouseMove={() => setActiveComments(null)}
         >
           {
             <>
