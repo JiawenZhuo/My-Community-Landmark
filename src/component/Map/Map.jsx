@@ -43,6 +43,10 @@ function Map() {
     });
   }, []);
 
+  useEffect(()=>{
+    console.log(searchResults);
+  },[searchResults]);
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       setCurrent({
@@ -99,28 +103,72 @@ function Map() {
   const handleSearch = (e) => {
     e.preventDefault();
     axios.get(base_url + `/searchByText/${searchInput}`).then((res) => {
-      console.log("res" + JSON.stringify(res.data.landmark));
-      setSearchResults(JSON.stringify(res.data.landmark));
+      console.log("isarray"+Array.isArray(res.data.landmark));
+      setSearchResults(res.data.landmark);
     });
   };
   const searchOnChange = (e) => {
     e.preventDefault();
     setSearchInput(e.target.value);
+
   };
   const onClickMap=(e)=>{
     setclickedLatLng(e);
     setActiveComments(null);
   }
+  const testIfBelongResult=(landmark)=>{
+    if(searchResults === null) return false;
+    for(const result of searchResults){
+      if(result._id === landmark._id){
+        return true;
+      }
+    }
+    return false;
+  }
+  const SearchResultMarker=({landmark})=>{
+    return(
+    <Marker
+    icon={{
+    path:
+      "M12.75 0l-2.25 2.25 2.25 2.25-5.25 6h-5.25l4.125 4.125-6.375 8.452v0.923h0.923l8.452-6.375 4.125 4.125v-5.25l6-5.25 2.25 2.25 2.25-2.25-11.25-11.25zM10.5 12.75l-1.5-1.5 5.25-5.25 1.5 1.5-5.25 5.25z",
+    fillColor: "#0000ff",
+    fillOpacity: 1.0,
+    strokeWeight: 0,
+    scale: 1.25
+    }}
+    key={landmark._id}
+    position={{ lat: landmark.lat, lng: landmark.lng }}
+    onClick={(e) => handleClickMarker(e.latLng.toJSON(), landmark._id)}
+  ></Marker>
+  )}
+
+  const SavedMarker=({landmark})=>{
+    return(
+    <Marker
+    key={landmark._id}
+    position={{ lat: landmark.lat, lng: landmark.lng }}
+    onClick={(e) => handleClickMarker(e.latLng.toJSON(), landmark._id)}
+  ></Marker> 
+  )}
+
   const renderMap = () => {
-    console.log(searchResults);
+
     return (
       <>
         <SearchForm
           handleSearch={(e) => handleSearch(e)}
           searchOnChange={searchOnChange}
           searchInput={searchInput}
-          style={{ zIndex: 100 }}
           setSearchResults ={setSearchResults}
+          style={{
+            position: "absolute",
+            zIndex: 100,
+            width: "100%", // or you can use width: '100vw'
+            height: "20%",
+            top: 10,
+            left: 0,
+            backgroundColor: "white", // or you can use height: '100vh'
+          }}
         />
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -132,22 +180,21 @@ function Map() {
           {
             <>
               <Marker
+                key={current}
                 position={current}
                 onClick={() => handleClickCurrentMarker({ current })}
-              >
-                {activeMarker && <InfoBoxComponent position={current} />}
+                >
+                <InfoBoxComponent position={current}/>
               </Marker>
               {clickedLatLng && (
-                <Marker  position={clickedLatLng}
+                <Marker position={clickedLatLng}
                 />
               )}
-              {landmarks.map((landmark) => (
-                <Marker
-                  key={landmark._id}
-                  position={{ lat: landmark.lat, lng: landmark.lng }}
-                  onClick={(e) => handleClickMarker(e.latLng.toJSON(), landmark._id)}
-                ></Marker>
-              ))}
+              {landmarks.map((landmark) => {
+                return(
+                  testIfBelongResult(landmark) ? <SearchResultMarker landmark={landmark}/> : <SavedMarker landmark={landmark}/>
+                )}
+              )}
             </>
           }
         </GoogleMap>
@@ -190,13 +237,6 @@ function Map() {
                   </>
                 );
               })}
-              {
-                searchResults && searchResults.map((searchResult)=>{
-                    return (
-                      <div>searchResult._id</div>
-                    )
-                })
-              }
           </div>
         )}
       </>
