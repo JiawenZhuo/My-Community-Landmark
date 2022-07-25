@@ -48,13 +48,13 @@ function Map() {
   },[searchResults]);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
+    let currenttLocation = navigator.geolocation.getCurrentPosition((position) => {
       setCurrent({
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       });
     });
-  }, []);
+  },);
 
   const { isLoaded } = useLoadScript({
     // Enter your own Google Maps API key
