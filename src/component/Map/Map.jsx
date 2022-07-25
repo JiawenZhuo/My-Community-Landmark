@@ -91,6 +91,7 @@ function Map() {
       .then((res) => {
         console.log(res.data.id);
         console.log(res.data); 
+        setActiveComments([...activeComments,comments]);
       });
     }else{
     axios
@@ -101,9 +102,10 @@ function Map() {
       })
       .then((res) => {
         setLandmarks([...landmarks, res.data.landmark])
+        setActiveComments(comments);
       });
     }
-    setActiveComments(null);
+
     setAddNote(false);
     setNoteInput(null);
     setUserInput(null);
