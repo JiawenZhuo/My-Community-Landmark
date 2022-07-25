@@ -64,7 +64,7 @@ function Map() {
   const handleClickCurrentMarker = (e) => {
     // console.log(addNote);
     setclickedLatLng(e);
-    setAddNote(true);
+
   };
   const handleClickMarker = ( e, id ) => {
     setclickedLatLng(e);
@@ -77,14 +77,12 @@ function Map() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("submitted: " + noteInput);
     const comments = [
       {
         user: userInput,
         comment: noteInput,
       },
     ];
-    console.log(activeMarkerId);
     if(activeComments){
       axios
       .put(base_url + `/update/${activeMarkerId}`, {
@@ -95,8 +93,7 @@ function Map() {
         console.log(res.data); 
       });
     }else{
-  
-    // setAddNote(false);
+
     axios
       .post(base_url + "/landmark", {
         lng: clickedLatLng.lng,
@@ -108,6 +105,10 @@ function Map() {
         console.log(res.data); 
       });
     }
+    setActiveComments(null);
+    setAddNote(false);
+    setNoteInput(null);
+    setUserInput(null);
   };
   const handleSearch = (e) => {
     e.preventDefault();
@@ -124,6 +125,7 @@ function Map() {
   const onClickMap=(e)=>{
     setclickedLatLng(e);
     setActiveComments(null);
+    setAddNote(false)
   }
   const testIfBelongResult=(landmark)=>{
     if(searchResults === null) return false;
@@ -196,8 +198,8 @@ function Map() {
                 <InfoBoxComponent position={current}/>
               </Marker>
               {clickedLatLng && (
-                <Marker position={clickedLatLng}
-                />
+                <Marker position={clickedLatLng}/>
+                
               )}
               {landmarks.map((landmark) => {
                 return(
@@ -225,7 +227,7 @@ function Map() {
             </div>
             <button onClick={() => setclickedLatLng(null)} >close</button>
             <button onClick={() => setAddNote(true)}>add Note</button>
-            {clickedLatLng && (
+            {addNote && (
               <AddNoteForm
                 handleSubmit={(e)=>handleSubmit(e)}
                 noteInput={noteInput}
