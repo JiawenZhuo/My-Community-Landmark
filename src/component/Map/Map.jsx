@@ -1,9 +1,8 @@
-import { React, useState, useEffect, useRef } from "react";
+import { React, useState, useEffect, } from "react";
 import {
   GoogleMap,
   Marker,
   useLoadScript,
-  InfoBox,
 } from "@react-google-maps/api";
 import InfoBoxComponent from "../InfoBoxComponent/InfoBoxCompoent";
 import axios from "axios";
@@ -13,18 +12,30 @@ import SearchForm from "../SearchForm/SearchForm";
 const containerStyle = {
   width: "100%",
   height: "100vh",
-  display: "flex",
-  justifyContent: "space-around",
   zIndex: 0,
 };
-
+const ShowActiveComments=({activeComments})=>{
+  return(
+      <>{
+      activeComments ?
+        activeComments.map((comment) => {
+          return(
+        <>
+        <div style={{ width: "100%" }} key={comment._id}>
+        <span>{`${comment.comment} by ${comment.user}`}</span>
+        </div>
+        </>
+          )
+        }): null
+      }
+   </>
+  )
+}
 
 function Map() {
   const [current, setCurrent] = useState(
     navigator.geolocation.getCurrentPosition.coords
   );
-  // const noteInput = useRef(null);
-  // const userInput = useRef(null);
   const [activeMarkerId, setActiveMarkerId] = useState();
   const [addNote, setAddNote] = useState(false);
   const [clickedLatLng, setclickedLatLng] = useState();
@@ -38,14 +49,12 @@ function Map() {
 
   useEffect(() => {
     axios.get(base_url + "/get").then((res) => {
-      console.log(res.data.data);
       setLandmarks(res.data.data);
     });
   }, []);
 
   useEffect(()=>{
-    console.log(searchResults);
-  },[searchResults]);
+  },[searchResults,activeComments]);
 
   useEffect(() => {
     let currenttLocation = navigator.geolocation.getCurrentPosition((position) => {
@@ -57,71 +66,21 @@ function Map() {
   },);
 
   const { isLoaded } = useLoadScript({
-    // Enter your own Google Maps API key
     googleMapsApiKey: "AIzaSyAeMFL1pYWS8f1aqpEGZaPNIZBtrPNDlvU",
   });
 
   const handleClickCurrentMarker = (e) => {
-    // console.log(addNote);
     setclickedLatLng(e);
 
   };
   const handleClickMarker = ( e, id ) => {
     setclickedLatLng(e);
     setActiveMarkerId(id);
-    console.log(activeMarkerId);
     axios.get(base_url + `/getComments/${id}`).then((res) => {
-      setActiveComments(res.data.message); //This line of code will redirect you once the submission is succeed
+      setActiveComments(res.data.message); 
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const comments = [
-      {
-        user: userInput,
-        comment: noteInput,
-      },
-    ];
-    if(activeComments){
-      axios
-      .put(base_url + `/update/${activeMarkerId}`, {
-        comments: comments,
-      })
-      .then((res) => {
-        console.log(res.data.id);
-        console.log(res.data); 
-        setActiveComments([...activeComments,comments]);
-      });
-    }else{
-    axios
-      .post(base_url + "/landmark", {
-        lng: clickedLatLng.lng,
-        lat: clickedLatLng.lat,
-        comments: comments,
-      })
-      .then((res) => {
-        setLandmarks([...landmarks, res.data.landmark])
-        setActiveComments(comments);
-      });
-    }
-
-    setAddNote(false);
-    setNoteInput(null);
-    setUserInput(null);
-  };
-  const handleSearch = (e) => {
-    e.preventDefault();
-    axios.get(base_url + `/searchByText/${searchInput}`).then((res) => {
-      console.log("isarray"+Array.isArray(res.data.landmark));
-      setSearchResults(res.data.landmark);
-    });
-  };
-  const searchOnChange = (e) => {
-    e.preventDefault();
-    setSearchInput(e.target.value);
-
-  };
   const onClickMap=(e)=>{
     setclickedLatLng(e);
     setActiveComments(null);
@@ -161,10 +120,57 @@ function Map() {
     onClick={(e) => handleClickMarker(e.latLng.toJSON(), landmark._id)}
   ></Marker> 
   )}
+ 
 
   const renderMap = () => {
+    const handleSearch = (e) => {
+      e.preventDefault();
+      axios.get(base_url + `/searchByText/${searchInput}`).then((res) => {
+        setSearchResults(res.data.landmark);
+      });
+    };
+    const searchOnChange = (e) => {
+      setSearchInput(e.target.value);
+      e.preventDefault();
+    };
+    const handleSubmit = (e) => {
+      e.preventDefault();
+    
+      const comments = [
+        {
+          user: userInput,
+          comment: noteInput,
+        },
+      ];
+    
+      if(activeComments){
+        axios.put(base_url + `/update/${activeMarkerId}`, {
+          comments: comments,
+        })
+        .then((res) => {
+          setActiveComments(comments);
+          console.log(res.data); 
+          
+        });
+      }else{
+      axios
+        .post(base_url + "/landmark", {
+          lng: clickedLatLng.lng,
+          lat: clickedLatLng.lat,
+          comments: comments,
+        })
+        .then((res) => {
+          setLandmarks([...landmarks, res.data.landmark])
+          setActiveComments(comments);
+        });
+      }
+  
+      setAddNote(false);
+      setNoteInput(null);
+      setUserInput(null);
+    };
 
-    return (
+    return(
       <>
         <SearchForm
           handleSearch={(e) => handleSearch(e)}
@@ -172,13 +178,13 @@ function Map() {
           searchInput={searchInput}
           setSearchResults ={setSearchResults}
           style={{
-            position: "absolute",
+            position: "fixed",
             zIndex: 100,
-            width: "100%", // or you can use width: '100vw'
+            width: "100%", 
             height: "20%",
             top: 10,
             left: 0,
-            backgroundColor: "white", // or you can use height: '100vh'
+            backgroundColor: "white", 
           }}
         />
         <GoogleMap
@@ -210,7 +216,7 @@ function Map() {
         {clickedLatLng && (
           <div
             style={{
-              position: "absolute",
+              position: "fixed",
               zIndex: 0,
               width: "100%", // or you can use width: '100vw'
               height: "20%",
@@ -224,7 +230,7 @@ function Map() {
               {"lng " + clickedLatLng.lng}
             </div>
             <button onClick={() => setclickedLatLng(null)} >close</button>
-            <button onClick={() => setAddNote(true)}>add Note</button>
+            {addNote ? null : <button onClick={() => setAddNote(true)}>add Note</button>}
             {addNote && (
               <AddNoteForm
                 handleSubmit={(e)=>handleSubmit(e)}
@@ -234,25 +240,15 @@ function Map() {
                 setNoteInput={setNoteInput}
               />
             )}
-
-            {
-            activeComments &&
-              activeComments.map((comment) => {
-                return (
-                  <>
-                    <div style={{ width: "100%" }} key={comment._id}>
-                      <span>{`${comment.comment} by ${comment.user}`}</span>
-                    </div>
-                  </>
-                );
-              })}
+               <ShowActiveComments activeComments={activeComments} />
           </div>
+          
         )}
       </>
-    );
+    )
   };
 
-  return isLoaded ? renderMap() : null;
+  return isLoaded ? renderMap(): null
 }
 
 export default Map;
