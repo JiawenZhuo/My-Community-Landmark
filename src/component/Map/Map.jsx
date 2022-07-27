@@ -13,8 +13,7 @@ import InfoSectionAtBottom from "../InfoSectionAtBottom/InfoSectionAtBottom";
 const googleMapStyle={
   width: "100%",
   height: "100vh",
-  zIndex: 0,
-  overflow: "hidden",
+  zIndex: 0
 }
 
 const InfoSectionAtBottomStyle={
