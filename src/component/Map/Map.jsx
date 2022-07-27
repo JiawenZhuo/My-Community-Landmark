@@ -11,7 +11,9 @@ import SearchResultMarker from "../SearchResultMarker/SearchResultMarker";
 import InfoSectionAtBottom from "../InfoSectionAtBottom/InfoSectionAtBottom";
 import { useMediaQuery } from "react-responsive";
 import MediaQuery from "react-responsive";
+
 const googleMapStyle={
+  position: "absolute",
   width: "100%",
   height: "100vh",
   zIndex: 0
