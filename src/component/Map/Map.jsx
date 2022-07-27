@@ -10,12 +10,26 @@ import SearchForm from "../SearchForm/SearchForm";
 import SearchResultMarker from "../SearchResultMarker/SearchResultMarker";
 import InfoSectionAtBottom from "../InfoSectionAtBottom/InfoSectionAtBottom";
 
-
-const containerStyle = {
+const googleMapStyle={
   width: "100%",
   height: "100vh",
   zIndex: 0,
-};
+}
+
+const InfoSectionAtBottomStyle={
+  padding: "10px",
+  position: "fixed",
+  zIndex: 100,
+  width: "100%", 
+  height: "20%",
+  left: "0",
+  bottom: "20%"
+}
+
+const searchForm={
+  position: "fixed",
+  zIndex: 100,
+}
 
 function Map() {
   const [current, setCurrent] = useState(
@@ -138,28 +152,20 @@ function Map() {
       setAddNote(false);
       setNoteInput(null);
       setUserInput(null);
-    };
+    }; 
 
     return(
       <>
+        <div>
         <SearchForm
           handleSearch={(e) => handleSearch(e)}
           searchOnChange={searchOnChange}
           searchInput={searchInput}
           setSearchResults ={setSearchResults}
-          className="searchForm"
-          style={{
-            position: "absolute",
-            zIndex: 100,
-            width: "100%", 
-            height: "20%",
-            top: 10,
-            left: 0,
-            backgroundColor: "white", 
-          }}
+          style={searchForm}
         />
         <GoogleMap
-          mapContainerStyle={containerStyle}
+          mapContainerStyle={googleMapStyle}
           center={current}
           zoom={10}
           onClick={(e) => onClickMap(e.latLng.toJSON())}
@@ -184,9 +190,9 @@ function Map() {
             </>
           }
         </GoogleMap>
-          <InfoSectionAtBottom clickedLatLng={clickedLatLng} setclickedLatLng={setclickedLatLng} setAddNote ={setAddNote} handleSubmit={handleSubmit}
+          <InfoSectionAtBottom  style={InfoSectionAtBottomStyle} clickedLatLng={clickedLatLng} setclickedLatLng={setclickedLatLng} setAddNote ={setAddNote} handleSubmit={handleSubmit}
           noteInput={noteInput}userInput={userInput}setUserInput={setUserInput} setNoteInput={setNoteInput}activeComments={activeComments}addNote={addNote}/> 
-
+        </div>
       </>
     )
   };
