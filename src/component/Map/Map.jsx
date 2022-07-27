@@ -24,15 +24,13 @@ const InfoSectionAtBottomStyle={
   width: "100%", 
   height: "20%",
   left: "0",
-  bottom: "20%"
+  bottom: "20%",
+  minHeight: "30vh"
 }
 
 const searchForm={
   position: "absolute",
-  zIndex: 100,
-  '@media (max-width: 500px)': {
-    display: 'none',
-  }
+  zIndex: 100
 }
 
 function Map() {
