@@ -13,8 +13,8 @@ import InfoSectionAtBottom from "../InfoSectionAtBottom/InfoSectionAtBottom";
 
 const googleMapStyle={
   position: "absolute",
-  width: "100%",
-  height: "100vh",
+  width: "100vw",
+  height: "80vh",
   zIndex: 0
 }
 
