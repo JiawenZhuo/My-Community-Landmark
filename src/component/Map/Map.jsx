@@ -6,31 +6,16 @@ import {
 } from "@react-google-maps/api";
 import InfoBoxComponent from "../InfoBoxComponent/InfoBoxCompoent";
 import axios from "axios";
-import AddNoteForm from "../AddNoteForm/AddNoteForm";
 import SearchForm from "../SearchForm/SearchForm";
+import SearchResultMarker from "../SearchResultMarker/SearchResultMarker";
+import InfoSectionAtBottom from "../InfoSectionAtBottom/InfoSectionAtBottom";
+
 
 const containerStyle = {
   width: "100%",
   height: "100vh",
   zIndex: 0,
 };
-const ShowActiveComments=({activeComments})=>{
-  return(
-      <>{
-      activeComments ?
-        activeComments.map((comment) => {
-          return(
-        <>
-        <div style={{ width: "100%" }} key={comment._id}>
-        <span>{`${comment.comment} by ${comment.user}`}</span>
-        </div>
-        </>
-          )
-        }): null
-      }
-   </>
-  )
-}
 
 function Map() {
   const [current, setCurrent] = useState(
@@ -73,13 +58,6 @@ function Map() {
     setclickedLatLng(e);
 
   };
-  const handleClickMarker = ( e, id ) => {
-    setclickedLatLng(e);
-    setActiveMarkerId(id);
-    axios.get(base_url + `/getComments/${id}`).then((res) => {
-      setActiveComments(res.data.message); 
-    });
-  };
 
   const onClickMap=(e)=>{
     setclickedLatLng(e);
@@ -95,22 +73,7 @@ function Map() {
     }
     return false;
   }
-  const SearchResultMarker=({landmark})=>{
-    return(
-    <Marker
-    icon={{
-    path:
-      "M12.75 0l-2.25 2.25 2.25 2.25-5.25 6h-5.25l4.125 4.125-6.375 8.452v0.923h0.923l8.452-6.375 4.125 4.125v-5.25l6-5.25 2.25 2.25 2.25-2.25-11.25-11.25zM10.5 12.75l-1.5-1.5 5.25-5.25 1.5 1.5-5.25 5.25z",
-    fillColor: "#0000ff",
-    fillOpacity: 1.0,
-    strokeWeight: 0,
-    scale: 1.25
-    }}
-    key={landmark._id}
-    position={{ lat: landmark.lat, lng: landmark.lng }}
-    onClick={(e) => handleClickMarker(e.latLng.toJSON(), landmark._id)}
-  ></Marker>
-  )}
+
 
   const SavedMarker=({landmark})=>{
     return(
@@ -120,8 +83,15 @@ function Map() {
     onClick={(e) => handleClickMarker(e.latLng.toJSON(), landmark._id)}
   ></Marker> 
   )}
- 
 
+  const handleClickMarker = ( e, id ) => {
+    setclickedLatLng(e);
+    setActiveMarkerId(id);
+    axios.get(base_url + `/getComments/${id}`).then((res) => {
+      setActiveComments(res.data.message); 
+    });
+  };
+ 
   const renderMap = () => {
     const handleSearch = (e) => {
       e.preventDefault();
@@ -177,6 +147,7 @@ function Map() {
           searchOnChange={searchOnChange}
           searchInput={searchInput}
           setSearchResults ={setSearchResults}
+          className="searchForm"
           style={{
             position: "absolute",
             zIndex: 100,
@@ -207,43 +178,15 @@ function Map() {
               )}
               {landmarks && landmarks.map((landmark) => {
                 return(
-                  testIfBelongResult(landmark) ? <SearchResultMarker landmark={landmark}/> : <SavedMarker landmark={landmark}/>
+                  testIfBelongResult(landmark) ? <SearchResultMarker landmark={landmark} setclickedLatLng={setclickedLatLng} setActiveMarkerId={setActiveMarkerId} setActiveComments={setActiveComments}/> : <SavedMarker landmark={landmark}/>
                 )}
               )}
             </>
           }
         </GoogleMap>
-        {clickedLatLng && (
-          <div
-            style={{
-              position: "fixed",
-              zIndex: 0,
-              width: "100%", // or you can use width: '100vw'
-              height: "20%",
-              bottom: 0,
-              left: 0,
-              backgroundColor: "white", // or you can use height: '100vh'
-            }}
-          >
-            <div>
-              {"lat " + clickedLatLng.lat}
-              {"lng " + clickedLatLng.lng}
-            </div>
-            <button onClick={() => setclickedLatLng(null)} >close</button>
-            {addNote ? null : <button onClick={() => setAddNote(true)}>add Note</button>}
-            {addNote && (
-              <AddNoteForm
-                handleSubmit={(e)=>handleSubmit(e)}
-                noteInput={noteInput}
-                userInput={userInput}
-                setUserInput={setUserInput}
-                setNoteInput={setNoteInput}
-              />
-            )}
-               <ShowActiveComments activeComments={activeComments} />
-          </div>
-          
-        )}
+          <InfoSectionAtBottom clickedLatLng={clickedLatLng} setclickedLatLng={setclickedLatLng} setAddNote ={setAddNote} handleSubmit={handleSubmit}
+          noteInput={noteInput}userInput={userInput}setUserInput={setUserInput} setNoteInput={setNoteInput}activeComments={activeComments}addNote={addNote}/> 
+
       </>
     )
   };
