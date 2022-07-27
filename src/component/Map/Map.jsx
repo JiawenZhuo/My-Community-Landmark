@@ -21,7 +21,6 @@ const googleMapStyle={
 
 const InfoSectionAtBottomStyle={
   padding: "10px",
-  position: "absolute",
   zIndex: 100,
   width: "100%", 
   height: "20%",
@@ -30,7 +29,6 @@ const InfoSectionAtBottomStyle={
 }
 
 const searchForm={
-  position: "absolute",
   zIndex: 100
 }
 
