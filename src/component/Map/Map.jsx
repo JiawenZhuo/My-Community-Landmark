@@ -9,7 +9,8 @@ import axios from "axios";
 import SearchForm from "../SearchForm/SearchForm";
 import SearchResultMarker from "../SearchResultMarker/SearchResultMarker";
 import InfoSectionAtBottom from "../InfoSectionAtBottom/InfoSectionAtBottom";
-
+import { useMediaQuery } from "react-responsive";
+import MediaQuery from "react-responsive";
 const googleMapStyle={
   width: "100%",
   height: "100vh",
@@ -18,7 +19,7 @@ const googleMapStyle={
 
 const InfoSectionAtBottomStyle={
   padding: "10px",
-  position: "fixed",
+  position: "absolute",
   zIndex: 100,
   width: "100%", 
   height: "20%",
@@ -27,7 +28,7 @@ const InfoSectionAtBottomStyle={
 }
 
 const searchForm={
-  position: "fixed",
+  position: "absolute",
   zIndex: 100,
   '@media (max-width: 500px)': {
     display: 'none',
@@ -48,6 +49,7 @@ function Map() {
   const [activeComments, setActiveComments] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const base_url = "https://my-community-landmarks.herokuapp.com/api";
+
 
   useEffect(() => {
     axios.get(base_url + "/get").then((res) => {
@@ -193,8 +195,10 @@ function Map() {
             </>
           }
         </GoogleMap>
+
           <InfoSectionAtBottom  style={InfoSectionAtBottomStyle} clickedLatLng={clickedLatLng} setclickedLatLng={setclickedLatLng} setAddNote ={setAddNote} handleSubmit={handleSubmit}
           noteInput={noteInput}userInput={userInput}setUserInput={setUserInput} setNoteInput={setNoteInput}activeComments={activeComments}addNote={addNote}/> 
+
         </div>
       </>
     )
