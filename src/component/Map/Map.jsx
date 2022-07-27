@@ -29,7 +29,9 @@ const InfoSectionAtBottomStyle={
 }
 
 const searchForm={
-  position: "absolute",
+  position: "fixed",
+  bottom: "30px",
+  width: "100%",
   zIndex: 100
 }
 
