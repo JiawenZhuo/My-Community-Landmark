@@ -14,6 +14,7 @@ const googleMapStyle={
   width: "100%",
   height: "100vh",
   zIndex: 0,
+  overflow: "hidden",
 }
 
 const InfoSectionAtBottomStyle={
@@ -29,6 +30,9 @@ const InfoSectionAtBottomStyle={
 const searchForm={
   position: "fixed",
   zIndex: 100,
+  '@media (max-width: 500px)': {
+    display: 'none',
+  }
 }
 
 function Map() {
