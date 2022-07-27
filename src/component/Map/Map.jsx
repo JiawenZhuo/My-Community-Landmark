@@ -9,8 +9,7 @@ import axios from "axios";
 import SearchForm from "../SearchForm/SearchForm";
 import SearchResultMarker from "../SearchResultMarker/SearchResultMarker";
 import InfoSectionAtBottom from "../InfoSectionAtBottom/InfoSectionAtBottom";
-import { useMediaQuery } from "react-responsive";
-import MediaQuery from "react-responsive";
+
 
 const googleMapStyle={
   position: "absolute",
@@ -21,6 +20,7 @@ const googleMapStyle={
 
 const InfoSectionAtBottomStyle={
   padding: "10px",
+  position: "absolute",
   zIndex: 100,
   width: "100%", 
   height: "20%",
@@ -29,6 +29,7 @@ const InfoSectionAtBottomStyle={
 }
 
 const searchForm={
+  position: "absolute",
   zIndex: 100
 }
 
@@ -46,7 +47,6 @@ function Map() {
   const [activeComments, setActiveComments] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const base_url = "https://my-community-landmarks.herokuapp.com/api";
-
 
   useEffect(() => {
     axios.get(base_url + "/get").then((res) => {
