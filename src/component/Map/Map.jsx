@@ -24,8 +24,7 @@ const InfoSectionAtBottomStyle={
   width: "100%", 
   height: "20%",
   left: "0",
-  bottom: "20%",
-  minHeight: "30vh"
+  bottom: "20%"
 }
 
 const searchForm={
