@@ -178,7 +178,7 @@ function Map() {
           searchInput={searchInput}
           setSearchResults ={setSearchResults}
           style={{
-            position: "fixed",
+            position: "absolute",
             zIndex: 100,
             width: "100%", 
             height: "20%",
