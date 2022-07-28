@@ -1,21 +1,27 @@
-import React from 'react'
+import React from "react";
 
-function ActiveComments({activeComments}) {
+function ActiveComments({ activeComments }) {
   return (
-            <>{
-            activeComments ?
-              activeComments.map((comment) => {
-                return(
+    <>
+      {activeComments
+        ? activeComments.map((comment) => {
+            return (
               <>
-              <div style={{ width: "100%" }} key={comment._id}>
-              <span>{`${comment.comment} by ${comment.user}`}</span>
-              </div>
+                <div
+                  style={{
+                    width: "50%",
+                    margin: "5px 25%",
+                  }}
+                  key={comment._id}
+                >
+                  <div style={{border: "1px solid black",borderRadius: "10px",}}>{`${comment.comment} by ${comment.user}`}</div>
+                </div>
               </>
-                )
-              }): null
-            }
-         </>
-  )
+            );
+          })
+        : null}
+    </>
+  );
 }
 
-export default ActiveComments
+export default ActiveComments;
