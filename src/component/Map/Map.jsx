@@ -52,7 +52,7 @@ function Map() {
   const [searchInput, setSearchInput] = useState("");
   const [activeComments, setActiveComments] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
-  const base_url = "https://my-community-landmark.herokuapp.com/api";
+  const base_url = "https://my-community-landmark-backend.herokuapp.com/api/";
 
   useEffect(() => {
     axios.get(base_url + "/get").then((res) => {

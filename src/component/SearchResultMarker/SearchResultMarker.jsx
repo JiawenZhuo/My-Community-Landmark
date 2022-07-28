@@ -15,7 +15,7 @@ function SearchResultMarker({
       setActiveComments(res.data.message);
     });
   };
-  const base_url = "https://my-community-landmarks.herokuapp.com/api";
+  const base_url = "https://my-community-landmark-backend.herokuapp.com/api/";
   return (
     <Marker
       icon={{
