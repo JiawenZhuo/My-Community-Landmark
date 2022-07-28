@@ -11,11 +11,17 @@ function App() {
     })
   },[])
 
+  const appstyle={
+    width: "70vw",
+    height: "70vh",
+    display: "inline-block",
+  }
+
   return (
   
     <>
-      <div>
-        <Map />
+      <div style={appstyle}>
+        <Map/>
      </div> 
     </>
   );
