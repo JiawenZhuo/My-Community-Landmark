@@ -23,19 +23,13 @@ const wrapper={
   textAlign: "center",
   border: "yellow" /* red */
 }
-const mapWrapper={
-  width: "70%",
-  height: "70%",
-  overflow: "hidden",
-}
-
 
 const googleMapStyle={
   position: "absolute",
-  width: "100%",
-  height: "100%",
-  left: "0",
-  top: "50px",
+  top: "10px",
+  right:"0px",
+  bottom:"0px",
+  left:"0px",
   zIndex: 0,
   overflow: "hidden"
 }
@@ -191,7 +185,6 @@ function Map() {
           setSearchResults ={setSearchResults}
           style={searchForm}
         />
-        <div style={mapWrapper}>
         <GoogleMap
           mapContainerStyle={googleMapStyle}
           center={current}
@@ -218,7 +211,6 @@ function Map() {
             </>
           }
         </GoogleMap>
-        </div>
           <InfoSectionAtBottom  style={InfoSectionAtBottomStyle} clickedLatLng={clickedLatLng} setclickedLatLng={setclickedLatLng} setAddNote ={setAddNote} handleSubmit={handleSubmit}
           noteInput={noteInput}userInput={userInput}setUserInput={setUserInput} setNoteInput={setNoteInput}activeComments={activeComments}addNote={addNote}/> 
 
