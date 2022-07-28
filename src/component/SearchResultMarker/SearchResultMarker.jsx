@@ -7,7 +7,6 @@ function SearchResultMarker({
   setclickedLatLng,
   setActiveMarkerId,
   setActiveComments,
-  
 }) {
   const handleClickMarker = (e, id) => {
     setclickedLatLng(e);
