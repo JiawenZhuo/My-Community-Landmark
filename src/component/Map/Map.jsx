@@ -26,9 +26,9 @@ const wrapper={
 
 const googleMapStyle={
   position: "absolute",
-  top: "10px",
+  top: "20px",
   right:"0px",
-  bottom:"0px",
+  bottom:"50px",
   left:"0px",
   zIndex: 0,
   overflow: "hidden"
