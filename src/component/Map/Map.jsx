@@ -46,7 +46,8 @@ const searchForm={
   position: "absolute",
   left: "0px",
   top: "0px",
-  width: "100%",
+  width: "70vm",
+  height: "10px",
   zIndex: 100
 }
 
