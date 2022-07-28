@@ -9,27 +9,37 @@ import axios from "axios";
 import SearchForm from "../SearchForm/SearchForm";
 import SearchResultMarker from "../SearchResultMarker/SearchResultMarker";
 import InfoSectionAtBottom from "../InfoSectionAtBottom/InfoSectionAtBottom";
-
+const wrapper={
+  // width: "70vw",
+  // height: "70vh",
+  // display: "inline-block",
+  top: "0px",
+  right:"0px",
+  bottom:"0px",
+  left:"0px"
+}
 
 const googleMapStyle={
   position: "absolute",
-  width: "100vw",
-  height: "80vh",
-  zIndex: 0
+  width: "100%",
+  height: "100%",
+  left: "0",
+  top: "50px",
+  zIndex: 0,
 }
 
 const InfoSectionAtBottomStyle={
-  padding: "10px",
   position: "absolute",
   zIndex: 100,
   width: "100%", 
-  height: "20%",
-  left: "0",
-  bottom: "20%"
+  height: "50px",
+  left: "0px",
+  bottom: "0px"
 }
 
 const searchForm={
   position: "absolute",
+  left: "0px",
   bottom: "30px",
   width: "100%",
   zIndex: 100
@@ -160,7 +170,7 @@ function Map() {
 
     return(
       <>
-        <div>
+        <div style={wrapper}>
         <SearchForm
           handleSearch={(e) => handleSearch(e)}
           searchOnChange={searchOnChange}
@@ -168,6 +178,7 @@ function Map() {
           setSearchResults ={setSearchResults}
           style={searchForm}
         />
+        <div>
         <GoogleMap
           mapContainerStyle={googleMapStyle}
           center={current}
@@ -194,7 +205,7 @@ function Map() {
             </>
           }
         </GoogleMap>
-
+        </div>
           <InfoSectionAtBottom  style={InfoSectionAtBottomStyle} clickedLatLng={clickedLatLng} setclickedLatLng={setclickedLatLng} setAddNote ={setAddNote} handleSubmit={handleSubmit}
           noteInput={noteInput}userInput={userInput}setUserInput={setUserInput} setNoteInput={setNoteInput}activeComments={activeComments}addNote={addNote}/> 
 
