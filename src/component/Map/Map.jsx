@@ -20,13 +20,14 @@ const wrapper={
   overflow: "hidden",
   maxWidth: "100vw",
   maxHeight: "100vh",
-  textAlign: "center"
+  textAlign: "center",
+  border: "yellow" /* red */
 }
-const mapWrapper={
-  width: "70vw",
-  height: "70vh",
-  overflow: "hidden",
-}
+// const mapWrapper={
+//   width: "70%",
+//   height: "70%",
+//   overflow: "hidden",
+// }
 
 
 const googleMapStyle={
@@ -190,7 +191,7 @@ function Map() {
           setSearchResults ={setSearchResults}
           style={searchForm}
         />
-        <div style={mapWrapper}>
+        <div>
         <GoogleMap
           mapContainerStyle={googleMapStyle}
           center={current}
