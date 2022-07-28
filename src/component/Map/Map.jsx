@@ -28,7 +28,7 @@ const googleMapStyle={
   position: "absolute",
   top: "20px",
   right:"0px",
-  bottom:"50px",
+  bottom:"0px",
   left:"0px",
   zIndex: 0,
   overflow: "hidden"
