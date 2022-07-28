@@ -30,6 +30,7 @@ const googleMapStyle={
   left: "0",
   top: "50px",
   zIndex: 0,
+  overflow: "hidden"
 }
 
 const InfoSectionAtBottomStyle={
@@ -44,7 +45,7 @@ const InfoSectionAtBottomStyle={
 const searchForm={
   position: "absolute",
   left: "0px",
-  bottom: "30px",
+  top: "0px",
   width: "100%",
   zIndex: 100
 }
