@@ -18,7 +18,9 @@ const wrapper={
   bottom:"0px",
   left:"0px",
   overflow: "hidden",
-  maxWidth: "100vw"
+  maxWidth: "100vw",
+  maxHeight: "100vh",
+  textAlign: "center"
 }
 
 const googleMapStyle={
